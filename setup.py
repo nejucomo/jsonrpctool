@@ -14,15 +14,13 @@ setup(
     license='GPLv3',
     url='https://github.com/nejucomo/{}'.format(PACKAGE),
     install_requires=[
+        'jsonrpcclient[requests]',
     ],
 
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            '{} = {}.main:main'.format(
-                PACKAGE.replace('_', '-'),
-                PACKAGE,
-            )
+            '{0} = {0}.main:main'.format(PACKAGE),
         ],
     }
 )
