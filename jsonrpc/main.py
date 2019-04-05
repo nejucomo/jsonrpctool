@@ -6,6 +6,9 @@ import argparse
 import jsonrpcclient
 
 
+ENDPOINT_ENV = 'JSONRPC_ENDPOINT'
+
+
 def main(args=sys.argv[1:]):
     """
     Commandline JSON-RPC client tool.
@@ -17,14 +20,29 @@ def main(args=sys.argv[1:]):
 
 def parse_args(args):
     p = argparse.ArgumentParser(description=main.__doc__)
+
+    epdef = os.environ.get(ENDPOINT_ENV)
     p.add_argument(
         '--endpoint',
         dest='ENDPOINT',
-        default=os.environ.get('JSONRPC_ENDPOINT'),
+        default=epdef,
+        help=(
+            'JSON-RPC endpoint, defaults to {} environment variable: {}'
+            .format(
+                ENDPOINT_ENV,
+                'not defined' if epdef is None else repr(epdef),
+            )
+        ),
     )
     p.add_argument('METHOD')
     p.add_argument('PARAMS', nargs='*')
     opts = p.parse_args(args)
+
+    if opts.ENDPOINT is None:
+        p.error(
+            'No endpoint supplied with --endpoint or {} environment variable.'
+            .format(ENDPOINT_ENV)
+        )
 
     listparams = []
     dictparams = {}
