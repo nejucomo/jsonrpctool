@@ -3,7 +3,7 @@ import re
 import sys
 import json
 import argparse
-import jsonrpcclient
+from jsonrpcclient.clients.http_client import HTTPClient
 
 
 ENDPOINT_ENV = 'JSONRPC_ENDPOINT'
@@ -14,8 +14,9 @@ def main(args=sys.argv[1:]):
     Commandline JSON-RPC client tool.
     """
     (endpoint, method, listparams, dictparams) = parse_args(args)
-    result = jsonrpcclient.request(endpoint, method, *listparams, **dictparams)
-    json.dump(result, sys.stdout, sort_keys=True, indent=2)
+    client = HTTPClient(endpoint, basic_logging=False)
+    response = client.request(method, *listparams, **dictparams)
+    json.dump(response.data.result, sys.stdout, sort_keys=True, indent=2)
 
 
 def parse_args(args):
@@ -64,11 +65,11 @@ def parse_args(args):
             elif newparamtype != paramtype:
                 p.error('Cannot mix array and object params.')
 
-            valstr = m.group('VALUE')
+            value = m.group('VALUE')
             try:
-                value = json.loads(valstr)
-            except ValueError as e:
-                p.error('Could not decode arg {!r}: {}'.format(valstr, e))
+                value = json.loads(value)
+            except ValueError:
+                pass
 
             if paramtype == 'array':
                 listparams.append(value)
