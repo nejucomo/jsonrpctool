@@ -4,6 +4,7 @@ import sys
 import json
 import argparse
 from jsonrpcclient.clients.http_client import HTTPClient
+from jsonrpcclient.exceptions import ReceivedErrorResponseError
 
 
 ENDPOINT_ENV = 'JSONRPC_ENDPOINT'
@@ -15,8 +16,12 @@ def main(args=sys.argv[1:]):
     """
     (endpoint, method, listparams, dictparams) = parse_args(args)
     client = HTTPClient(endpoint, basic_logging=False)
-    response = client.request(method, *listparams, **dictparams)
-    json.dump(response.data.result, sys.stdout, sort_keys=True, indent=2)
+    try:
+        response = client.request(method, *listparams, **dictparams)
+    except ReceivedErrorResponseError as e:
+        raise SystemExit(str(e))
+    else:
+        json.dump(response.data.result, sys.stdout, sort_keys=True, indent=2)
 
 
 def parse_args(args):
