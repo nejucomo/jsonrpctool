@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 
-PACKAGE = 'jsonrpc'
+PACKAGE = 'jsonrpctool'
 
 setup(
     name=PACKAGE,
