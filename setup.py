@@ -8,7 +8,7 @@ PACKAGE = 'jsonrpctool'
 setup(
     name=PACKAGE,
     description='Commandline JSON-RPC client tool.',
-    version='0.1.0',
+    version='0.1.1',
     author='Nathan Wilcox',
     author_email='nejucomo+dev@gmail.com',
     license='GPLv3',
