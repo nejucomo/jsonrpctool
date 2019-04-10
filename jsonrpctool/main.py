@@ -55,7 +55,7 @@ def parse_args(args):
     paramtype = None
 
     for param in opts.PARAMS:
-        m = re.match(r'((?P<KEY>[a-zA-Z0-9_]+)=)?(?P<VALUE>.*)$', param)
+        m = re.match(r'(?m)^((?P<KEY>[a-zA-Z0-9_]+)=)?(?P<VALUE>.*)$', param)
         if m is None:
             p.error('Could not parse: {!r}'.format(param))
         else:
